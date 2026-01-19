@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ topic.title }} - Форум</title></head>
+<body>
+<h1>{{ topic.title }}</h1>
+<p>Ветка: <a href="{% url 'branch_detail' topic.branch.id %}">{{ topic.branch.name }}</a></p>
+<p>Автор: {{ topic.author }} | Создана: {{ topic.created_at|date:"d.m.Y H:i" }}</p>
+
+<h2>Сообщения:</h2>
+<div>
+{% for msg in messages %}
+    <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+        <strong>{{ msg.author }}:</strong> {{ msg.content }}<br>
+        <small>{{ msg.created_at|date:"d.m.Y H:i" }}</small>
+    </div>
+{% empty %}
+    <p>Пока нет сообщений.</p>
+{% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+    <h3>Написать ответ:</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Отправить</button>
+    </form>
+{% else %}
+    <p><a href="/admin/login/">Войдите</a>, чтобы оставить сообщение.</p>
+{% endif %}
+
+<a href="{% url 'branch_detail' topic.branch.id %}">← Вернуться к ветке</a>
+</body>
+</html>

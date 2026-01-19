@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Создать тему в "{{ branch.name }}"</title></head>
+<body>
+<h1>Создать тему в "{{ branch.name }}"</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать тему</button>
+</form>
+
+<a href="{% url 'branch_detail' branch.id %}">← Вернуться в "{{ branch.name }}"</a>
+</body>
+</html>

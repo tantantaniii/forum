@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>{% if parent_branch %}Создать подветку{% else %}Создать ветку{% endif %}</title></head>
+<body>
+<h1>{% if parent_branch %}Создать подветку в "{{ parent_branch.name }}"{% else %}Создать новую ветку{% endif %}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+
+<a href="{% url 'branch_list' %}">← Вернуться к списку веток</a>
+{% if parent_branch %}
+    <a href="{% url 'branch_detail' parent_branch.id %}">← Вернуться в "{{ parent_branch.name }}"</a>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ branch.name }} - Форум</title></head>
+<body>
+<h1>{{ branch.name }}</h1>
+<p>{{ branch.description }}</p>
+
+{% if user.is_authenticated %}
+    <p><a href="{% url 'create_subbranch' branch.id %}">➕ Создать подветку</a></p>
+    <p><a href="{% url 'create_topic' branch.id %}">➕ Создать тему</a></p>
+{% endif %}
+
+<h2>Подветки:</h2>
+<ul>
+{% for sub in subbranches %}
+    <li><a href="{% url 'branch_detail' sub.id %}">{{ sub.name }}</a></li>
+{% empty %}
+    <li>Нет подветок</li>
+{% endfor %}
+</ul>
+
+<h2>Темы:</h2>
+<ul>
+{% for topic in topics %}
+    <li><a href="{% url 'topic_detail' topic.id %}">{{ topic.title }}</a> (автор: {{ topic.author }})</li>
+{% empty %}
+    <li>Нет тем</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'branch_list' %}">← Вернуться к списку веток</a>
+</body>
+</html>
