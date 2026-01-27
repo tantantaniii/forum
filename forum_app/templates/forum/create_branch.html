@@ -1,18 +1,114 @@
 <!DOCTYPE html>
-<html>
-<head><title>{% if parent_branch %}Создать подветку{% else %}Создать ветку{% endif %}</title></head>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if parent_branch %}Создать подветку{% else %}Создать ветку{% endif %}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 2px solid #4a6fa5;
+            margin-bottom: 30px;
+        }
+        header h1 a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-size: 28px;
+        }
+        .auth-info { font-size: 14px; }
+        .auth-info a { color: #4a6fa5; text-decoration: underline; }
+        main { max-width: 700px; margin: 0 auto; }
+        h2 { margin: 20px 0 15px; color: #2c3e50; }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        label { display: block; margin-bottom: 6px; font-weight: bold; }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+        button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #219653; }
+        .btn {
+            display: inline-block;
+            background: #4a6fa5;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .btn:hover { background: #3a5a80; }
+    </style>
+</head>
 <body>
-<h1>{% if parent_branch %}Создать подветку в "{{ parent_branch.name }}"{% else %}Создать новую ветку{% endif %}</h1>
+    <header>
+        <h1><a href="{% url 'branch_list' %}">📚 Форум</a></h1>
+        <div class="auth-info">
+            {% if user.is_authenticated %}
+                Привет, {{ user.username }}!
+                <a href="/admin/logout/">Выйти</a>
+            {% else %}
+                <a href="/admin/login/?next={{ request.path }}">Войти</a>
+            {% endif %}
+        </div>
+    </header>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Создать</button>
-</form>
+    <main>
+        <h2>{% if parent_branch %}Создать подветку в "{{ parent_branch.name }}"{% else %}Создать новую ветку{% endif %}</h2>
 
-<a href="{% url 'branch_list' %}">← Вернуться к списку веток</a>
-{% if parent_branch %}
-    <a href="{% url 'branch_detail' parent_branch.id %}">← Вернуться в "{{ parent_branch.name }}"</a>
-{% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_name">Название ветки:</label>
+            {{ form.name }}
+
+            <label for="id_description">Описание:</label>
+            {{ form.description }}
+
+            {% if not parent_branch %}
+                <label for="id_parent_branch">Родительская ветка (если подветка):</label>
+                {{ form.parent_branch }}
+            {% endif %}
+
+            <button type="submit">Создать</button>
+        </form>
+
+        <a href="{% url 'branch_list' %}" class="btn">← Отмена</a>
+        {% if parent_branch %}
+            <a href="{% url 'branch_detail' parent_branch.pk %}" class="btn">← В "{{ parent_branch.name }}"</a>
+        {% endif %}
+    </main>
+
+    <footer style="text-align: center; margin-top: 40px; padding-top: 20px; color: #777; border-top: 1px solid #eee;">
+        &copy; Сагитова Т.Р., 2026
+    </footer>
 </body>
 </html>

@@ -34,18 +34,13 @@ class TopicForm(forms.ModelForm):
             'branch': forms.HiddenInput()  
         }    
 
+
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['content']
-        labels = {
-            'content': 'Сообщение'
-        }
         widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 4,
-                'placeholder': 'Напишите ваше сообщение...'
-            })
+            'content': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Напишите ваше сообщение...'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -55,7 +50,7 @@ class MessageForm(forms.ModelForm):
     def save(self, commit=True):
         message = super().save(commit=False)
         message.topic = self.topic
-        message.author = self.instance.author if self.instance.pk else None  # если редактируем
+        message.author = self.instance.author or None
         if commit:
             message.save()
         return message    
