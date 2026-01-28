@@ -6,7 +6,9 @@ urlpatterns = [
     path('branch/<int:pk>/', views.BranchDetailView.as_view(), name='branch_detail'),
     path('branch/create/', views.BranchCreateView.as_view(), name='create_branch'),
     path('branch/<int:parent_id>/create-subbranch/', views.BranchCreateView.as_view(), name='create_subbranch'),
-    path('branch/<int:branch_id>/create-topic/', views.TopicCreateView.as_view(), name='create_topic'),
-    path('topic/<int:pk>/', views.TopicDetailView.as_view(), name='topic_detail'),
-    path('topic/<int:topic_id>/post/', views.MessageCreateView.as_view(), name='post_message'),
+
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('logout/', views.LogoutConfirmView.as_view(), name='logout_confirm'),
+    path('logout/action/', views.logout_action, name='logout_action'), 
+    path('register/', views.RegisterView.as_view(), name='register'),
 ]

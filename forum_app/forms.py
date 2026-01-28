@@ -1,17 +1,22 @@
 from django import forms
-from .models import Branch, Topic, Message
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Branch, Message
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
 
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
         fields = ['name', 'description', 'parent_branch']
-        labels = {
-            'name': 'Название ветки',
-            'description': 'Описание',
-            'parent_branch': 'Родительская ветка (если подветка)'
-        }
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
+            'parent_branch': forms.Select(attrs={'style': 'width: 100%; padding: 6px;'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -21,36 +26,14 @@ class BranchForm(forms.ModelForm):
             self.fields['parent_branch'].initial = parent_branch
             self.fields['parent_branch'].widget = forms.HiddenInput()
 
-
-class TopicForm(forms.ModelForm):
-    class Meta:
-        model = Topic
-        fields = ['title', 'branch']
-        labels = {
-            'title': 'Заголовок темы',
-            'branch': 'Ветка'
-        }
-        widgets = {
-            'branch': forms.HiddenInput()  
-        }    
-
-
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Напишите ваше сообщение...'})
-        }
-
-    def __init__(self, *args, **kwargs):
-        self.topic = kwargs.pop('topic', None)
-        super().__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        message = super().save(commit=False)
-        message.topic = self.topic
-        message.author = self.instance.author or None
-        if commit:
-            message.save()
-        return message    
+            'content': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Напишите ваше сообщение...',
+                'style': 'width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;'
+            })
+        }        

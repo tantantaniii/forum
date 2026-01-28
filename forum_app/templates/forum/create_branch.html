@@ -1,61 +1,56 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if parent_branch %}Создать подветку{% else %}Создать ветку{% endif %}</title>
+    <title>{% if parent_branch %}Создать тему{% else %}Создать раздел{% endif %}</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-            padding: 20px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
         }
+
+        body {
+            font-family: sans-serif;
+            background: #f9f9f9;
+            padding: 20px
+        }
+
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
             border-bottom: 2px solid #4a6fa5;
-            margin-bottom: 30px;
+            margin-bottom: 30px
         }
+
         header h1 a {
             text-decoration: none;
             color: #2c3e50;
-            font-size: 28px;
+            font-size: 28px
         }
-        .auth-info { font-size: 14px; }
-        .auth-info a { color: #4a6fa5; text-decoration: underline; }
-        main { max-width: 700px; margin: 0 auto; }
-        h2 { margin: 20px 0 15px; color: #2c3e50; }
-        form {
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            margin: 20px 0;
+
+        .auth {
+            font-size: 14px
         }
-        label { display: block; margin-bottom: 6px; font-weight: bold; }
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: inherit;
-            margin-bottom: 12px;
+
+        .auth a {
+            color: #4a6fa5;
+            text-decoration: underline
         }
-        button {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
+
+        main {
+            max-width: 600px;
+            margin: 0 auto
         }
-        button:hover { background: #219653; }
+
+        h2 {
+            margin: 20px 0 15px;
+            color: #2c3e50
+        }
+
         .btn {
             display: inline-block;
             background: #4a6fa5;
@@ -64,51 +59,145 @@
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 8px 0
         }
-        .btn:hover { background: #3a5a80; }
+
+        .btn:hover {
+            background: #3a5a80
+        }
+
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid #ddd
+        }
+
+        .form-group {
+            margin-bottom: 16px
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer
+        }
+
+        button:hover {
+            background: #219653
+        }
     </style>
 </head>
+
 <body>
-    <header>
-        <h1><a href="{% url 'branch_list' %}">📚 Форум</a></h1>
-        <div class="auth-info">
+    <header style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 2px solid #4a6fa5;
+    margin-bottom: 30px;
+">
+        <h1 style="
+        margin: 0;
+        font-size: 28px;
+        color: #2c3e50;
+        font-weight: 600;
+        text-decoration: none;
+    ">
+            <a href="{% url 'branch_list' %}" style="color: inherit; text-decoration: none;">
+                📚 Форум
+            </a>
+        </h1>
+
+        <div style="
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 15px;
+    ">
             {% if user.is_authenticated %}
-                Привет, {{ user.username }}!
-                <a href="/admin/logout/">Выйти</a>
+            <span style="
+                color: #2c3e50;
+                font-weight: 500;
+            ">Привет, <strong>{{ user.username }}</strong>!</span>
+            <a href="{% url 'logout_confirm' %}" style="
+                   background: #4a6fa5;
+                   color: white;
+                   padding: 8px 16px;
+                   border-radius: 6px;
+                   text-decoration: none;
+                   font-weight: 600;
+                   transition: background 0.2s;
+               " onmouseover="this.style.background='#3a5a80'" onmouseout="this.style.background='#4a6fa5'">
+                Выйти
+            </a>
             {% else %}
-                <a href="/admin/login/?next={{ request.path }}">Войти</a>
+            <a href="{% url 'login' %}" style="
+                   background: #27ae60;
+                   color: white;
+                   padding: 8px 16px;
+                   border-radius: 6px;
+                   text-decoration: none;
+                   font-weight: 600;
+                   transition: background 0.2s;
+               " onmouseover="this.style.background='#219653'" onmouseout="this.style.background='#27ae60'">
+                Войти
+            </a>
             {% endif %}
         </div>
     </header>
 
     <main>
-        <h2>{% if parent_branch %}Создать подветку в "{{ parent_branch.name }}"{% else %}Создать новую ветку{% endif %}</h2>
+        <h2>{% if parent_branch %}Создать тему в "{{ parent_branch.name }}"{% else %}Создать новый раздел{% endif %}
+        </h2>
 
         <form method="post">
             {% csrf_token %}
-            <label for="id_name">Название ветки:</label>
-            {{ form.name }}
-
-            <label for="id_description">Описание:</label>
-            {{ form.description }}
-
+            <div class="form-group">
+                <label>Название:</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label>Описание (опционально):</label>
+                {{ form.description }}
+            </div>
             {% if not parent_branch %}
-                <label for="id_parent_branch">Родительская ветка (если подветка):</label>
+            <div class="form-group">
+                <label>Родительский раздел (если создаёте тему):</label>
                 {{ form.parent_branch }}
+            </div>
             {% endif %}
-
             <button type="submit">Создать</button>
         </form>
 
         <a href="{% url 'branch_list' %}" class="btn">← Отмена</a>
         {% if parent_branch %}
-            <a href="{% url 'branch_detail' parent_branch.pk %}" class="btn">← В "{{ parent_branch.name }}"</a>
+        <a href="{% url 'branch_detail' parent_branch.pk %}" class="btn">← В "{{ parent_branch.name }}"</a>
         {% endif %}
     </main>
-
-    <footer style="text-align: center; margin-top: 40px; padding-top: 20px; color: #777; border-top: 1px solid #eee;">
-        &copy; Сагитова Т.Р., 2026
-    </footer>
 </body>
+
 </html>

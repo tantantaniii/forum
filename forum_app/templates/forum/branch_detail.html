@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ branch.name }} — Форум</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-            padding: 20px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
         }
+
+        body {
+            font-family: sans-serif;
+            background: #f9f9f9;
+            padding: 20px
+        }
+
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
             border-bottom: 2px solid #4a6fa5;
-            margin-bottom: 30px;
+            margin-bottom: 30px
         }
+
         header h1 a {
             text-decoration: none;
             color: #2c3e50;
-            font-size: 28px;
+            font-size: 28px
         }
-        .auth-info { font-size: 14px; }
-        .auth-info a { color: #4a6fa5; text-decoration: underline; }
-        main { max-width: 900px; margin: 0 auto; }
-        h2, h3 { margin: 20px 0 12px; color: #2c3e50; }
-        .branch-item, .topic-item {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
+
+        .auth {
+            font-size: 14px
         }
-        .branch-item h3 a, .topic-item h3 a {
-            text-decoration: none;
-            color: #2980b9;
+
+        .auth a {
+            color: #4a6fa5;
+            text-decoration: underline
         }
-        .description { color: #666; font-style: italic; margin-top: 6px; }
+
+        main {
+            max-width: 700px;
+            margin: 0 auto
+        }
+
+        h2,
+        h3 {
+            margin: 20px 0 12px;
+            color: #2c3e50
+        }
+
         .btn {
             display: inline-block;
             background: #4a6fa5;
@@ -50,60 +60,211 @@
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
-            margin: 8px 0;
+            margin: 8px 0
         }
-        .btn:hover { background: #3a5a80; }
+
+        .btn:hover {
+            background: #3a5a80
+        }
+
+        .item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px
+        }
+
+        .item h3 a {
+            text-decoration: none;
+            color: #2980b9
+        }
+
+        .desc {
+            color: #666;
+            font-style: italic;
+            margin-top: 6px
+        }
+
+        .message {
+            background: #f0f7ff;
+            border-left: 4px solid #4a6fa5;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px
+        }
+
+        .message-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin: 20px 0
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 100px;
+            font-family: inherit
+        }
+
+        button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold
+        }
+
+        button:hover {
+            background: #219653
+        }
+
+        .errorlist {
+            color: red;
+            margin: 5px 0
+        }
     </style>
 </head>
+
 <body>
-    <header>
-        <h1><a href="{% url 'branch_list' %}">📚 Форум</a></h1>
-        <div class="auth-info">
+    <header style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 2px solid #4a6fa5;
+    margin-bottom: 30px;
+">
+        <h1 style="
+        margin: 0;
+        font-size: 28px;
+        color: #2c3e50;
+        font-weight: 600;
+        text-decoration: none;
+    ">
+            <a href="{% url 'branch_list' %}" style="color: inherit; text-decoration: none;">
+                📚 Форум
+            </a>
+        </h1>
+
+        <div style="
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 15px;
+    ">
             {% if user.is_authenticated %}
-                Привет, {{ user.username }}!
-                <a href="/admin/logout/">Выйти</a>
+            <span style="
+                color: #2c3e50;
+                font-weight: 500;
+            ">Привет, <strong>{{ user.username }}</strong>!</span>
+            <a href="{% url 'logout_confirm' %}" style="
+                   background: #4a6fa5;
+                   color: white;
+                   padding: 8px 16px;
+                   border-radius: 6px;
+                   text-decoration: none;
+                   font-weight: 600;
+                   transition: background 0.2s;
+               " onmouseover="this.style.background='#3a5a80'" onmouseout="this.style.background='#4a6fa5'">
+                Выйти
+            </a>
             {% else %}
-                <a href="/admin/login/?next={{ request.path }}">Войти</a>
+            <a href="{% url 'login' %}" style="
+                   background: #27ae60;
+                   color: white;
+                   padding: 8px 16px;
+                   border-radius: 6px;
+                   text-decoration: none;
+                   font-weight: 600;
+                   transition: background 0.2s;
+               " onmouseover="this.style.background='#219653'" onmouseout="this.style.background='#27ae60'">
+                Войти
+            </a>
             {% endif %}
         </div>
     </header>
 
     <main>
         <h2>{{ branch.name }}</h2>
-
         {% if branch.description %}
-            <p class="description">{{ branch.description }}</p>
+        <p class="desc">{{ branch.description }}</p>
         {% endif %}
 
         {% if user.is_authenticated %}
-            <a href="{% url 'create_subbranch' branch.pk %}" class="btn">➕ Создать подветку</a>
-            <a href="{% url 'create_topic' branch.pk %}" class="btn">➕ Создать тему</a>
+        {% if branch.parent_branch %}
+        <!-- Это тема (подветка): показываем форму -->
+        <h3>Новое сообщение</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            {% if form.content.errors %}
+            <ul class="errorlist">
+                {% for error in form.content.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <button type="submit">Отправить</button>
+        </form>
+        {% else %}
+        <!-- Это корневая ветка: кнопка создания темы -->
+        <a href="{% url 'create_subbranch' branch.pk %}" class="btn">➕ Создать тему</a>
+        {% endif %}
         {% endif %}
 
-        <h3>Подветки</h3>
-        {% for sub in subbranches %}
-            <div class="branch-item">
-                <h3><a href="{% url 'branch_detail' sub.pk %}">{{ sub.name }}</a></h3>
+        {% if branch.parent_branch %}
+        <!-- Это тема: показываем сообщения -->
+        <h3>Обсуждение</h3>
+        {% for msg in messages %}
+        <div class="message">
+            <p>{{ msg.content }}</p>
+            <div class="message-meta">
+                {{ msg.author|default:"Аноним" }} | {{ msg.created_at|date:"d.m.Y H:i" }}
             </div>
+        </div>
         {% empty %}
-            <p>Нет подветок.</p>
+        <p>Пока нет сообщений.</p>
         {% endfor %}
-
+        {% else %}
+        <!-- Это корневая ветка: показываем подветки (темы) -->
         <h3>Темы</h3>
-        {% for topic in topics %}
-            <div class="topic-item">
-                <h3><a href="{% url 'topic_detail' topic.pk %}">{{ topic.title }}</a></h3>
-                <p>Автор: {{ topic.author|default:"Аноним" }} | {{ topic.created_at|date:"d.m.Y H:i" }}</p>
+        {% for sub in subbranches %}
+        <div class="item">
+            <h3><a href="{% url 'branch_detail' sub.pk %}">{{ sub.name }}</a></h3>
+            {% if sub.description %}
+            <p class="desc">{{ sub.description }}</p>
+            {% endif %}
+            <div class="meta" style="font-size:12px;color:#777;">
+                Автор: {{ sub.author|default:"Аноним" }} | {{ sub.created_at|date:"d.m.Y H:i" }}
             </div>
+        </div>
         {% empty %}
-            <p>Нет тем.</p>
+        <p>Нет тем.</p>
         {% endfor %}
+        {% endif %}
 
-        <a href="{% url 'branch_list' %}" class="btn">← К списку веток</a>
+        <a href="{% url 'branch_list' %}" class="btn">← К списку разделов</a>
     </main>
-
-    <footer style="text-align: center; margin-top: 40px; padding-top: 20px; color: #777; border-top: 1px solid #eee;">
-        &copy; Сагитова Т.Р., 2026
-    </footer>
 </body>
+
 </html>
